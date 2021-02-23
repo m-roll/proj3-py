@@ -8,6 +8,7 @@ from routerlib.message import Message
 class RouterPorts():
 
     def __init__(self, relationships, msg_callback):
+        print(relationships)
         self.ports = {}
         self.msg_callback = msg_callback
         for relationship in relationships:

@@ -107,40 +107,10 @@ class MessageRouting:
             routes = self.filter_relationships(srcif, routes)
         return self.sockets[peer] if peer else None
 
-    def forward(self, srcif, packet):
-        """ Forward a data packet """
-        # TODO
-        return False
-
     def coalesce(self):
         """ coalesce any routes that are right next to each other """
         # TODO (this is the most difficult task, save until last)
         return False
-
-    def update(self, srcif, packet):
-        """ handle update packets """
-        self.updates.append(packet)
-        return False
-
-    def revoke(self, packet):
-        """ handle revoke packets """
-        # TODO
-        return True
-
-    def dump(self, packet):
-        """ handles dump table requests """
-        # TODO
-        return True
-
-    def parse_packet(self, srcif, parsed):
-        """ dispatches a packet """
-        msg_type = parsed['type']
-        msg_source = parsed['src']
-        msg_dest = parsed['dst']
-        msg_ctnt = parsed['msg']
-        msg = Message(msg_type, msg_source, msg_dest, msg_ctnt)
-        self.message_handler.handle_message(srcif, msg)
-        return msg
 
     def send_error(self, conn, msg):
         """ Send a no_route error message """
