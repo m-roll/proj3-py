@@ -1,3 +1,4 @@
+from routerlib.message import MessageEncoder
 import socket
 import json
 
@@ -20,7 +21,7 @@ class Neighbor():
         return self.network_addr
 
     def transmit(self, msg):
-        str = json.dumps(msg)
+        str = json.dumps(msg, cls=MessageEncoder)
         print('transmitting:')
         print(str)
         self.socket.send(str)
