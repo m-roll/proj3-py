@@ -6,8 +6,9 @@ import json
 
 class RouterPorts():
 
-    def __init__(self, relationships):
+    def __init__(self, relationships, msg_callback):
         self.ports = {}
+        self.msg_callback = msg_callback
         for relationship in relationships:
             network, relation = relationship.split("-")
             my_ip = self._get_rel_ip(network)
@@ -45,9 +46,9 @@ class RouterPorts():
                 if k:
                     for addr in sock_map:
                         if sock_map[addr] == conn:
-                            srcif = addr
+                            src_neighbor = self.ports[addr]
                     msg = json.loads(k)
-                    if not self.parse_packet(srcif, msg):
+                    if not self.msg_callback(src_neighbor, msg):
                         self.send_error(conn, msg)
                 else:
                     return

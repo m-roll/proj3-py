@@ -11,10 +11,10 @@ class MessageHandler():
         self.forwarding_table = ForwardingTable()
         self.message_history = MessageHistory()
 
-    def handle_message(self, srcif, message):
-        message.dispatch(self.message_history, srcif)
-        message.dispatch(self.forwarding_table, srcif)
-        message.dispatch(self, srcif)
+    def handle_message(self, neighbor, message):
+        message.dispatch(self.message_history, neighbor)
+        message.dispatch(self.forwarding_table, neighbor)
+        message.dispatch(self, neighbor)
 
     def visit_update(self, source, dest, msg):
         self.router_client.broadcast(msg, self._filter_source(source))

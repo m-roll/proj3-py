@@ -48,6 +48,9 @@ class MessageRouting:
         self.message_handler = MessageHandler(self.router.get_ports())
         self.router.run()
 
+    def get_msg(self, neighbor, msg):
+        self.message_handler.handle_message(neighbor, msg)
+
     def lookup_routes(self, daddr):
         """ Lookup all valid routes for an address """
         # TODO
