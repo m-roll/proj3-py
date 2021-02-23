@@ -27,8 +27,8 @@ class MessageEncoder(json.JSONEncoder):
         if isinstance(obj, Message):
             return {
                 'type': obj.type,
-                'source': obj.source,
-                'dest': obj.dest,
+                'src': obj.source,
+                'dst': obj.dest,
                 'msg': obj.msg
             }
         else:
