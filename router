@@ -140,7 +140,7 @@ class Router:
 
     def handle_packet(self, srcif, packet):
         """ dispatches a packet """
-        # TODO
+        print(f"Handle paket: {srcif}//{packet}")
         return False
 
     def send_error(self, conn, msg):
