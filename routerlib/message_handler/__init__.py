@@ -24,7 +24,7 @@ class MessageHandler():
         self.router_client.broadcast_revoke(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
-        self.router_client.broadcast_data(msg)
+        # self.router_client.broadcast_data(msg, self._filter_source(source))
         pass
 
     def visit_dump(self, source, dest, msg):
