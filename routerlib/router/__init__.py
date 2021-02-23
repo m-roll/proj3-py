@@ -54,7 +54,6 @@ class RouterPorts():
                     msg_dest = parsed['dst']
                     msg_ctnt = parsed['msg']
                     msg = Message(msg_type, msg_source, msg_dest, msg_ctnt)
-                    if not self.msg_callback(src_neighbor, msg):
-                        self.send_error(conn, msg)
+                    self.msg_callback(src_neighbor, msg)
                 else:
                     return
