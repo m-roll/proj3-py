@@ -3,28 +3,29 @@
 class RouterClient():
 
     def __init__(self, neighbors):
-        print("in router client")
-        print(neighbors)
         self.neighbors = neighbors
 
     def broadcast_data(self, msg, filter_fn):
         to_broadcast = list(filter(filter_fn, self.neighbors.values()))
-        print(f'should be broadcasting data {msg}')
+        self._transmit_many(to_broadcast, msg)
 
     def broadcast_revoke(self, msg, filter_fn):
         to_broadcast = list(filter(filter_fn, self.neighbors.values()))
-        print(f'should be broadcasting revokation {msg}')
+        self._transmit_many(to_broadcast, msg)
 
     def broadcast_update(self, msg, filter_fn):
         to_broadcast = list(filter(filter_fn, self.neighbors.values()))
-        print(f'should be broadcasting update {msg}')
+        self._transmit_many(to_broadcast, msg)
 
     def forward_data(self, msg, dest):
-        self.transmit(dest, msg)
+        self._transmit(dest, msg)
 
     def send_table_dump(self, table, dest):
-        self.transmit(dest, table)
-        print('should be dumping table')
+        self._transmit(dest, table)
+
+    def _transmit_many(self, neighbors, msg):
+        for neighbor in neighbors:
+            self._transmit(neighbor, msg)
 
     def _transmit(self, neighbor, msg):
-        pass
+        print(f"Would have transmitted {msg} to {neighbor.get_addr()}")
