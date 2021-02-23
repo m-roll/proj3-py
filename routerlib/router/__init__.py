@@ -1,5 +1,7 @@
 
 from routerlib.neighbor import Neighbor
+import select
+import json
 
 
 class RouterPorts():
@@ -24,3 +26,28 @@ class RouterPorts():
 
     def get_ports(self):
         return self.ports
+
+    def run(self):
+        """ main loop for the router """
+        while True:
+            sock_tuples = self.get_sockets()
+            sock_map = {}
+            for addr, sock in sock_tuples:
+                sock_map[addr] = sock
+            socks = select.select(sock_map.values(), [], [], 0.1)[0]
+            for conn in socks:
+                try:
+                    k = conn.recv(65535)
+                except:
+                    # either died on a connection reset, or was SIGTERM's by parent
+                    print("connection dead?")
+                    return
+                if k:
+                    for addr in sock_map:
+                        if sock_map[addr] == conn:
+                            srcif = addr
+                    msg = json.loads(k)
+                    if not self.parse_packet(srcif, msg):
+                        self.send_error(conn, msg)
+                else:
+                    return
