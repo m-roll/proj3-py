@@ -16,10 +16,10 @@ class MessageHandler():
         message.dispatch(self.forwarding_table, srcif)
         message.dispatch(self, srcif)
 
-    def visit_update(self, source, msg):
+    def visit_update(self, source, dest, msg):
         self.router_client.broadcast(msg, self._filter_source(source))
 
-    def visit_revoke(self, source, msg):
+    def visit_revoke(self, source, dest, msg):
         self.router_client.broadcast(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
