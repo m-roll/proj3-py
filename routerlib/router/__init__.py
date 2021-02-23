@@ -2,6 +2,7 @@
 from routerlib.neighbor import Neighbor
 import select
 import json
+from routerlib.message import Message
 
 
 class RouterPorts():
@@ -47,7 +48,12 @@ class RouterPorts():
                     for addr in sock_map:
                         if sock_map[addr] == conn:
                             src_neighbor = self.ports[addr]
-                    msg = json.loads(k)
+                    parsed = json.loads(k)
+                    msg_type = parsed['type']
+                    msg_source = parsed['src']
+                    msg_dest = parsed['dst']
+                    msg_ctnt = parsed['msg']
+                    msg = Message(msg_type, msg_source, msg_dest, msg_ctnt)
                     if not self.msg_callback(src_neighbor, msg):
                         self.send_error(conn, msg)
                 else:
