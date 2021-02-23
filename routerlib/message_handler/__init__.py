@@ -12,9 +12,10 @@ class MessageHandler():
         self.message_history = MessageHistory()
 
     def handle_message(self, neighbor, message):
-        message.dispatch(self.message_history, neighbor)
-        message.dispatch(self.forwarding_table, neighbor)
-        message.dispatch(self, neighbor)
+        dest = message.dest
+        message.dispatch(self.message_history, neighbor, dest)
+        message.dispatch(self.forwarding_table, neighbor, dest)
+        message.dispatch(self, neighbor, dest)
 
     def visit_update(self, source, dest, msg):
         self.router_client.broadcast(msg, self._filter_source(source))
