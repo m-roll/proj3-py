@@ -16,6 +16,7 @@ class MessageHandler():
         message.dispatch(self.message_history, neighbor, dest)
         message.dispatch(self.forwarding_table, neighbor, dest)
         message.dispatch(self, neighbor, dest)
+        return True
 
     def visit_update(self, source, dest, msg):
         self.router_client.broadcast_update(msg, self._filter_source(source))
