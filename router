@@ -5,7 +5,7 @@ import argparse
 import json
 from routerlib.message_handler import MessageHandler
 from routerlib.message import Message
-from routerlib.router import Router
+from routerlib.router import RouterPorts
 import select
 import socket
 
@@ -47,7 +47,7 @@ class MessageRouting:
     def __init__(self, networks):
         _as, *networks = networks
         self.message_handler = MessageHandler()
-        self.router = Router(_as, networks, self.message_handler)
+        self.router = RouterPorts(_as, networks, self.message_handler)
 
     def lookup_routes(self, daddr):
         """ Lookup all valid routes for an address """
