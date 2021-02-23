@@ -44,11 +44,11 @@ class MessageRouting:
     def __init__(self, networks):
         _as, *networks = networks
 
-        self.router = RouterPorts(networks)
+        self.router = RouterPorts(networks, self.handle_msg)
         self.message_handler = MessageHandler(self.router.get_ports())
         self.router.run()
 
-    def get_msg(self, neighbor, msg):
+    def handle_msg(self, neighbor, msg):
         self.message_handler.handle_message(neighbor, msg)
 
     def lookup_routes(self, daddr):
