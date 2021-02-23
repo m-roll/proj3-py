@@ -21,7 +21,7 @@ class Neighbor():
         return self.network_addr
 
     def transmit(self, msg):
-        str = json.dumps(msg, cls=MessageEncoder)
+        str = json.dumps(msg, cls=MessageEncoder).encode()
         print('transmitting:')
         print(str)
         self.socket.send(str)
