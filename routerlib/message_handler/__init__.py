@@ -35,7 +35,8 @@ class MessageHandler():
         return self._all_neighbors_but_sender(source) if source.type == "cust" else self._all_customers_but_sender(source)
 
     def _all_neighbors_but_sender(self, source):
-        return lambda neighbor: neighbor.get_addr() == source.get_addr()
+        return lambda neighbor: print(neighbor)
+        # return lambda neighbor: neighbor.get_addr() == source.get_addr()
 
     def _all_customers_but_sender(self, source):
         return lambda neighbor: neighbor.get_addr() == source.get_addr() and neighbor.type == "cust"
