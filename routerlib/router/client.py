@@ -8,6 +8,12 @@ class RouterClient():
     def broadcast_data(self, msg, filter_fn):
         to_broadcast = list(filter(filter_fn, self.neighbors))
 
+    def broadcast_revoke(self, msg, filter_fn):
+        to_broadcast = list(filter(filter_fn, self.neighbors))
+
+    def broadcast_update(self, msg, filter_fn):
+        to_broadcast = list(filter(filter_fn, self.neighbors))
+
     def forward_data(self, msg, dest):
         self.transmit(dest, msg)
 

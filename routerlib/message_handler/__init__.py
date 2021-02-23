@@ -18,13 +18,13 @@ class MessageHandler():
         message.dispatch(self, neighbor, dest)
 
     def visit_update(self, source, dest, msg):
-        self.router_client.broadcast(msg, self._filter_source(source))
+        self.router_client.broadcast_update(msg, self._filter_source(source))
 
     def visit_revoke(self, source, dest, msg):
-        self.router_client.broadcast(msg, self._filter_source(source))
+        self.router_client.broadcast_revoke(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
-        self.router_client.broadcast(msg)
+        self.router_client.broadcast_data(msg)
         pass
 
     def visit_dump(self, source, dest, msg):
