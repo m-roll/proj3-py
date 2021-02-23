@@ -1,7 +1,9 @@
+from routerlib.message import MessageEncoder
 from routerlib.router.client import RouterClient
 from routerlib.message_history import MessageHistory
 from routerlib.neighbors import Neighbors
 from routerlib.forwarding_table import ForwardingTable
+import json
 
 
 class MessageHandler():
@@ -13,6 +15,7 @@ class MessageHandler():
 
     def handle_message(self, neighbor, message):
         dest = message.dest
+        print(f'Received message: {json.dumps(message, cls=MessageEncoder)}')
         message.dispatch(self.message_history, neighbor, dest)
         message.dispatch(self.forwarding_table, neighbor, dest)
         message.dispatch(self, neighbor, dest)
