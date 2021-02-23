@@ -17,4 +17,4 @@ class Message():
             visit_callback = receiver.visit_data
         elif self.type == "dump":
             visit_callback = receiver.visit_dump
-        visit_callback(receiver, self.source, dest, self)
+        visit_callback(self.source, dest, self)
