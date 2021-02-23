@@ -1,3 +1,4 @@
+import json
 
 
 class Message():
@@ -19,3 +20,16 @@ class Message():
         elif self.type == "dump":
             visit_callback = receiver.visit_dump
         visit_callback(neighbor_from, dest, self)
+
+
+class MessageEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Message):
+            return {
+                'type': obj.type,
+                'source': obj.source,
+                'dest': obj.dest,
+                'msg': obj.msg
+            }
+        else:
+            return super(MessageEncoder, self).default(obj)
