@@ -16,13 +16,13 @@ class RouterClient():
             self._forward_update(neighbor, msg)
 
     def _forward_update(self, neighbor, msg):
-        msg.source = neighbor.my_router_addr
-        msg.dest = neighbor.get_addr
+        msg.source = neighbor.get_my_router_addr()
+        msg.dest = neighbor.get_addr()
         self._transmit(neighbor, msg)
 
     def _forward_revoke(self, neighbor, msg):
-        msg.source = neighbor.my_router_addr
-        msg.dest = neighbor.get_addr
+        msg.source = neighbor.get_my_router_addr()
+        msg.dest = neighbor.get_addr()
         self._transmit(neighbor, msg)
 
     def forward_data(self, neighbor, msg):

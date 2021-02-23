@@ -17,6 +17,9 @@ class Neighbor():
     def get_socket(self):
         return (self.network_addr, self.socket)
 
+    def get_my_router_addr(self):
+        return self.my_router_addr
+
     def get_addr(self):
         return self.network_addr
 
