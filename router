@@ -149,7 +149,9 @@ class MessageRouting:
     def run(self):
         """ main loop for the router """
         while True:
-            socks = select.select(self.router.get_sockets(), [], [], 0.1)[0]
+            all_socks = self.router.get_sockets()
+            print(all_socks)
+            socks = select.select(all_socks, [], [], 0.1)[0]
             for network_addr, conn in socks:
                 try:
                     k = conn.recv(65535)

@@ -20,7 +20,7 @@ class RouterPorts():
 
     def get_sockets(self):
         ports = self.ports.values()
-        return list(map(lambda port: port.get_socket(), ports))
+        return list(map(lambda port: port.get_socket()[1], ports))
 
     def get_ports(self):
         return self.ports
