@@ -1,5 +1,8 @@
 
 
+from routerlib.message import Message
+
+
 class RouterClient():
 
     def __init__(self, neighbors):
@@ -29,7 +32,10 @@ class RouterClient():
         self._transmit(neighbor, msg)
 
     def send_table_dump(self, table, dest):
-        self._transmit(dest, table)
+        src = dest.get_my_router_addr()
+        dest = dest.get_addr()
+        msg = Message('table', src, dest, table)
+        self._transmit(dest, msg)
 
     def _transmit_many(self, neighbors, msg):
         for neighbor in neighbors:
