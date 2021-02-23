@@ -28,4 +28,4 @@ class RouterClient():
             self._transmit(neighbor, msg)
 
     def _transmit(self, neighbor, msg):
-        print(f"Would have transmitted {msg} to {neighbor.get_addr()}")
+        neighbor.transmit(msg)

@@ -1,4 +1,5 @@
 import socket
+import json
 
 
 class Neighbor():
@@ -17,3 +18,9 @@ class Neighbor():
 
     def get_addr(self):
         return self.network_addr
+
+    def transmit(self, msg):
+        str = json.dumps(msg)
+        print('transmitting:')
+        print(str)
+        self.socket.send(str)
