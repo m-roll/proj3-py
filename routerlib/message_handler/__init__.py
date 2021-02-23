@@ -6,7 +6,7 @@ from routerlib.forwarding_table import ForwardingTable
 
 class MessageHandler():
 
-    def __init__(self):
+    def __init__(self, neighbors):
         self.router_client = RouterClient()
         self.forwarding_table = ForwardingTable()
         self.message_history = MessageHistory()

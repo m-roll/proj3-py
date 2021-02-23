@@ -18,6 +18,9 @@ class RouterPorts():
         addr_split.append("1")
         return ".".join(addr_split)
 
-    def get_ports(self):
+    def get_sockets(self):
         ports = self.ports.values()
         return list(map(lambda port: port.get_socket(), ports))
+
+    def get_ports(self):
+        return self.ports

@@ -46,8 +46,9 @@ class MessageRouting:
 
     def __init__(self, networks):
         _as, *networks = networks
-        self.message_handler = MessageHandler()
+
         self.router = RouterPorts(_as, networks, self.message_handler)
+        self.message_handler = MessageHandler(self.router.get_ports())
 
     def lookup_routes(self, daddr):
         """ Lookup all valid routes for an address """
