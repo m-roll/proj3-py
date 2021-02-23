@@ -34,8 +34,9 @@ class RouterClient():
     def send_table_dump(self, table, dest):
         src = dest.get_my_router_addr()
         dest = dest.get_addr()
+        neighbor = self.neighbors[dest]
         msg = Message('table', src, dest, table)
-        self._transmit(dest, msg)
+        self._transmit(neighbor, msg)
 
     def _transmit_many(self, neighbors, msg):
         for neighbor in neighbors:
