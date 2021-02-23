@@ -10,10 +10,10 @@ class Neighbor():
         self.socket = socket.socket(
             socket.AF_UNIX, socket.SOCK_SEQPACKET)
         self.socket.setblocking(0)
-        self._socket.connect(network_addr)
+        self.socket.connect(network_addr)
 
     def get_socket(self):
-        return (self.network_addr, self._socket)
+        return (self.network_addr, self.socket)
 
     def get_addr(self):
         return self.network_addr
