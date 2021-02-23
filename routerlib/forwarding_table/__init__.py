@@ -17,6 +17,9 @@ class ForwardingTable():
             filtered_entries = filter(
                 self._filter_revokation(revokation, source), filtered_entries)
 
+    def get_entries(self):
+        return self.entries
+
     def visit_data(self, source, dest, msg):
         pass
 
