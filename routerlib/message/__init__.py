@@ -6,6 +6,7 @@ class Message():
         self.type = type
         self.source = source
         self.dest = dest
+        self.msg = msg
 
     def dispatch(self, receiver, neighbor_from, dest):
         visit_callback = None
