@@ -24,8 +24,8 @@ class MessageHandler():
         self.router_client.broadcast_revoke(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
-        # self.router_client.broadcast_data(msg, self._filter_source(source))
-        pass
+        # self.router_client.forward_data(msg, self._filter_source(source))
+        pass  # need to do lookup here
 
     def visit_dump(self, source, dest, msg):
         self.router_client.send_table_dump(
