@@ -3,6 +3,9 @@
 
 import argparse
 import json
+from routerlib.message_handler import MessageHandler
+from routerlib.message import Message
+from routerlib.router import Router
 import select
 import socket
 
@@ -38,24 +41,13 @@ PROV = "prov"
 
 ##########################################################################################
 
-class Router:
+class MessageRouting:
     """ Your Router """
 
     def __init__(self, networks):
-        self.routes = {}
-        self.updates = {}
-        self.relations = {}
-        self.sockets = {}
         _as, *networks = networks
-        for relationship in networks:
-            print(relationship)
-            network, relation = relationship.split("-")
-            self.sockets[network] = socket.socket(
-                socket.AF_UNIX, socket.SOCK_SEQPACKET)
-            self.sockets[network].setblocking(0)
-            self.sockets[network].connect(network)
-            self.relations[network] = relation
-            self.as_id = _as
+        self.message_handler = MessageHandler()
+        self.router = Router(_as, networks, self.message_handler)
 
     def lookup_routes(self, daddr):
         """ Lookup all valid routes for an address """
@@ -125,7 +117,7 @@ class Router:
 
     def update(self, srcif, packet):
         """ handle update packets """
-        # TODO
+        self.updates.append(packet)
         return False
 
     def revoke(self, packet):
@@ -138,10 +130,15 @@ class Router:
         # TODO
         return True
 
-    def handle_packet(self, srcif, packet):
+    def parse_packet(self, srcif, parsed):
         """ dispatches a packet """
-        print(f"Handle paket: {srcif}//{packet}")
-        return False
+        msg_type = parsed['type']
+        msg_source = parsed['src']
+        msg_dest = parsed['dst']
+        msg_ctnt = parsed['msg']
+        msg = Message(msg_type, msg_source, msg_dest, msg_ctnt)
+        self.message_handler.handle_message(srcif, msg)
+        return msg
 
     def send_error(self, conn, msg):
         """ Send a no_route error message """
@@ -151,19 +148,17 @@ class Router:
     def run(self):
         """ main loop for the router """
         while True:
-            socks = select.select(self.sockets.values(), [], [], 0.1)[0]
-            for conn in socks:
+            socks = select.select(self.router.get_sockets(), [], [], 0.1)[0]
+            for network_addr, conn in socks:
                 try:
                     k = conn.recv(65535)
                 except:
                     # either died on a connection reset, or was SIGTERM's by parent
+                    print("connection dead?")
                     return
                 if k:
-                    for sock in self.sockets:
-                        if self.sockets[sock] == conn:
-                            srcif = sock
                     msg = json.loads(k)
-                    if not self.handle_packet(srcif, msg):
+                    if not self.parse_packet(network_addr, msg):
                         self.send_error(conn, msg)
                 else:
                     return
@@ -174,4 +169,4 @@ if __name__ == "__main__":
     PARSER.add_argument('networks', metavar='networks',
                         type=str, nargs='+', help="networks")
     ARGS = PARSER.parse_args()
-    Router(ARGS.networks).run()
+    MessageRouting(ARGS.networks).run()
