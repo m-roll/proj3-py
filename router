@@ -149,7 +149,7 @@ class MessageRouting:
     def run(self):
         """ main loop for the router """
         while True:
-            sock_tuples = self.router.values()
+            sock_tuples = self.router.get_sockets()
             sock_map = {}
             for addr, sock in sock_tuples:
                 sock_map[addr] = sock
