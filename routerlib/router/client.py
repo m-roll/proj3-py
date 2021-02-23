@@ -22,6 +22,7 @@ class RouterClient():
     def _forward_update(self, neighbor, msg):
         msg.source = neighbor.get_my_router_addr()
         msg.dest = neighbor.get_addr()
+        msg.msg['ASPath'] = [self._as] + msg.msg['ASPath']
         self._transmit(neighbor, msg)
 
     def _forward_revoke(self, neighbor, msg):
