@@ -5,8 +5,9 @@ from routerlib.message import Message
 
 class RouterClient():
 
-    def __init__(self, neighbors):
+    def __init__(self, neighbors, _as):
         self.neighbors = neighbors
+        self._as = _as
 
     def broadcast_revoke(self, msg, filter_fn):
         to_broadcast = list(filter(filter_fn, self.neighbors.values()))
@@ -26,6 +27,7 @@ class RouterClient():
     def _forward_revoke(self, neighbor, msg):
         msg.source = neighbor.get_my_router_addr()
         msg.dest = neighbor.get_addr()
+        msg.msg['ASPath'] = [self._as] + msg.msg['ASPath']
         self._transmit(neighbor, msg)
 
     def forward_data(self, neighbor, msg):

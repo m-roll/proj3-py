@@ -45,7 +45,7 @@ class MessageRouting:
         _as, *networks = networks
 
         self.router = RouterPorts(networks, self.handle_msg)
-        self.message_handler = MessageHandler(self.router.get_ports())
+        self.message_handler = MessageHandler(self.router.get_ports(), _as)
         self.router.run()
 
     def handle_msg(self, neighbor, msg):
