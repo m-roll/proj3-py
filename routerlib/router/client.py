@@ -3,6 +3,8 @@
 class RouterClient():
 
     def __init__(self, neighbors):
+        print("in router client")
+        print(neighbors)
         self.neighbors = neighbors
 
     def broadcast_data(self, msg, filter_fn):
