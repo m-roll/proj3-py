@@ -46,6 +46,7 @@ class Router:
         self.updates = {}
         self.relations = {}
         self.sockets = {}
+        print(networks)
         for relationship in networks:
             print(relationship)
             network, relation = relationship.split("-")
