@@ -9,7 +9,7 @@ import json
 class MessageHandler():
 
     def __init__(self, neighbors, _as):
-        self.router_client = RouterClient(neighbors, _as)
+        self.router_client = RouterClient(neighbors, int(_as))
         self.forwarding_table = ForwardingTable()
         self.message_history = MessageHistory()
 

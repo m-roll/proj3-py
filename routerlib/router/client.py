@@ -22,13 +22,12 @@ class RouterClient():
     def _forward_update(self, neighbor, msg):
         msg.source = neighbor.get_my_router_addr()
         msg.dest = neighbor.get_addr()
-        msg.msg['ASPath'] = [self._as] + msg.msg['ASPath']
+        msg.msg = self._incr_path(msg.msg, )
         self._transmit(neighbor, msg)
 
     def _forward_revoke(self, neighbor, msg):
         msg.source = neighbor.get_my_router_addr()
         msg.dest = neighbor.get_addr()
-        msg.msg['ASPath'] = [self._as] + msg.msg['ASPath']
         self._transmit(neighbor, msg)
 
     def forward_data(self, neighbor, msg):
@@ -47,3 +46,9 @@ class RouterClient():
 
     def _transmit(self, neighbor, msg):
         neighbor.transmit(msg)
+
+    def _incr_path(self, msg):
+        last = msg['ASPath'][-1]
+        if not self._as == last:
+            msg['ASPath'] = msg['ASPath'].append(self._as)
+        return msg
