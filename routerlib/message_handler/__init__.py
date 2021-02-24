@@ -28,7 +28,11 @@ class MessageHandler():
 
     def visit_data(self, source, dest, msg):
         # self.router_client.forward_data(msg, self._filter_source(source))
-        pass  # need to do lookup here
+        route_addr = self.forwarding_table.get_route(dest)
+        if route_addr is not None:
+            route_neighbor = self.router_client.get_neighbor(route_addr)
+            self.router_client.forward_data(route_neighbor, msg)
+        # noroute otherwise
 
     def visit_dump(self, source, dest, msg):
         self.router_client.send_table_dump(

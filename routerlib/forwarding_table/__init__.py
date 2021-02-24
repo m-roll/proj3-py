@@ -41,7 +41,10 @@ class ForwardingTable():
         lowest_ip = self._resolve_matches(
             dest, pref_origin_type, lambda dest, candidate: -self._ip_to_num(candidate['network']))
 
-        return lowest_ip[0]
+        try:
+            return lowest_ip[0]
+        except IndexError:
+            return None
 
     def get_entries(self):
         return self.entries

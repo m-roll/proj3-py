@@ -19,6 +19,9 @@ class RouterClient():
         for neighbor in to_broadcast:
             self._forward_update(neighbor, msg)
 
+    def get_neighbor(self, neighbor_addr):
+        return self.neighbors[neighbor_addr]
+
     def _forward_update(self, neighbor, msg):
         msg.source = neighbor.get_my_router_addr()
         msg.dest = neighbor.get_addr()
