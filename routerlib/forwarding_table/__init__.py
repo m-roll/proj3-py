@@ -46,7 +46,8 @@ class ForwardingTable():
             return None
 
     def get_entries(self):
-        entries_only = list(map(lambda tuple: tuple[1], self.entries))
+        entries_only = map(lambda tuple: {
+                           "network": tuple[1]['network'], "peer": tuple[0].get_addr(), "netmask": tuple[1]['netmask']}, self.entries)
         return entries_only
 
     def visit_data(self, source, dest, msg):
