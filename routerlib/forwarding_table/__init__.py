@@ -56,6 +56,7 @@ class ForwardingTable():
     def _resolve_matches(self, dest, candidates, key):
         cand_precedence = {}
         for candidate in candidates:
+            print("CANDIDATE")
             print(candidate)
             index = key(dest, candidate)
             index_mems = cand_precedence.get(index, [])
