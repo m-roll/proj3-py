@@ -9,9 +9,7 @@ class ForwardingTable():
 
     def visit_update(self, source, dest, msg):
         peer = source.get_addr()
-        netmask = msg.msg['netmask']
-        network = msg.msg['network']
-        new_entry = {'network': network, 'netmask': netmask, 'peer': peer}
+        new_entry = msg.msg
         self.entries.append(new_entry)
 
     def visit_revoke(self, source, dest, msg):
