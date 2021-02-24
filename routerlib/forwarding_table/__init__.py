@@ -64,7 +64,7 @@ class ForwardingTable():
             cand_precedence[index] = index_mems
             print(cand_precedence)
 
-        _len, highest_prefix_matches = sorted(candidates.items(),
+        _len, highest_prefix_matches = sorted(cand_precedence.items(),
                                               key=lambda pair: pair[0])[0]
         print("FIRST IN ORDER")
         print(highest_prefix_matches)
