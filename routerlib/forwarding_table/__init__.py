@@ -65,8 +65,6 @@ class ForwardingTable():
 
         _len, highest_prefix_matches = sorted(cand_precedence.items(),
                                               key=lambda pair: pair[0])[0]
-        print("FIRST IN ORDER")
-        print(highest_prefix_matches)
         return highest_prefix_matches
 
     def _rank_prefix_match(self, dest, candidate):
