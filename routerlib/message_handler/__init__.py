@@ -30,6 +30,8 @@ class MessageHandler():
         # self.router_client.forward_data(msg, self._filter_source(source))
         route_addr = self.forwarding_table.get_route(dest)
         if route_addr is not None:
+            print('found route:')
+            print(route_addr)
             route_neighbor = self.router_client.get_neighbor(route_addr)
             self.router_client.forward_data(route_neighbor, msg)
         # noroute otherwise
