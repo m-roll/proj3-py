@@ -51,4 +51,5 @@ class RouterClient():
         last = msg['ASPath'][-1]
         if not self._as == last:
             msg['ASPath'] = msg['ASPath'].append(self._as)
+            print(msg)
         return msg
