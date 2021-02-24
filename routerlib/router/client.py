@@ -48,6 +48,9 @@ class RouterClient():
         neighbor.transmit(msg)
 
     def _incr_path(self, msg):
+        print("**************")
+        print('msg before append')
+        print(msg)
         last = msg['ASPath'][-1]
         if not self._as == last:
             msg['ASPath'] = msg['ASPath'].append(self._as)
