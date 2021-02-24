@@ -23,7 +23,7 @@ class ForwardingTable():
     def get_route(self, dest):
         # remove any without matching prefix
         with_matching_prefix = filter(
-            lambda source, entry: self._filter_matching_prefix(entry, dest), self.entries)
+            lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
