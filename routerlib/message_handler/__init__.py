@@ -28,9 +28,9 @@ class MessageHandler():
 
     def visit_data(self, source, dest, msg):
         # self.router_client.forward_data(msg, self._filter_source(source))
-        route_addr = self.forwarding_table.get_route(dest)['network']
-        if route_addr is not None:
-            route_neighbor = self.router_client.get_neighbor(route_addr)
+        routing_tuple = self.forwarding_table.get_route(dest)['network']
+        if routing_tuple is not None:
+            (route_neighbor, routing_info) = routing_tuple
             self.router_client.forward_data(route_neighbor, msg)
         # noroute otherwise
 

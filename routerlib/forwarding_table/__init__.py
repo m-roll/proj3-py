@@ -6,11 +6,12 @@ class ForwardingTable():
 
     def __init__(self):
         self.entries = []
+        # populated with tuple (neighbor, routing_info)
 
     def visit_update(self, source, dest, msg):
         peer = source.get_addr()
         new_entry = msg.msg
-        self.entries.append(new_entry)
+        self.entries.append((source, new_entry))
 
     def visit_revoke(self, source, dest, msg):
         revokations = msg.msg
@@ -22,7 +23,7 @@ class ForwardingTable():
     def get_route(self, dest):
         # remove any without matching prefix
         with_matching_prefix = filter(
-            lambda entry: self._filter_matching_prefix(entry, dest), self.entries)
+            lambda source, entry: self._filter_matching_prefix(entry, dest), self.entries)
 
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
@@ -56,13 +57,11 @@ class ForwardingTable():
     def _resolve_matches(self, dest, candidates, key):
         cand_precedence = {}
         for candidate in candidates:
-            print("CANDIDATE")
-            print(candidate)
-            index = key(dest, candidate)
+            cand_neighbor, cand_entry = candidate
+            index = key(dest, cand_entry)
             index_mems = cand_precedence.get(index, [])
             index_mems.append(candidate)
             cand_precedence[index] = index_mems
-            print(cand_precedence)
 
         _len, highest_prefix_matches = sorted(cand_precedence.items(),
                                               key=lambda pair: pair[0])[0]
