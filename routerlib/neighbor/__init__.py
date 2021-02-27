@@ -25,6 +25,6 @@ class Neighbor():
 
     def transmit(self, msg):
         str = json.dumps(msg, cls=MessageEncoder).encode()
-        print('transmitting:')
-        print(str)
+        # print('transmitting:')
+        # print(str)
         self.socket.send(str)
