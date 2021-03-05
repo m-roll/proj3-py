@@ -28,3 +28,6 @@ class Neighbor():
         # print('transmitting:')
         # print(str)
         self.socket.send(str)
+
+    def __str__(self):
+        f"Neighbor\{{address: {self.network_addr}, router_address: {self.my_router_addr}, type: {self.type}}}"
