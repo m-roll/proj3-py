@@ -61,6 +61,7 @@ class ForwardingTable():
                 continue
             cur_ip, cur_routing = cur
             next_ip, next_routing = next
+            print(cur_routing)
             cur_neighbor, cur_entry = cur_routing
             next_neighbor, next_entry = next_routing
             cur_netmask_num = ip_to_num(cur_entry['netmask'])
