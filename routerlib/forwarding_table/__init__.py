@@ -22,11 +22,11 @@ class ForwardingTable():
         self.entries = list(filtered_entries)
 
     def get_route(self, dest):
-        # remove any without matching prefix
 
-        # only include viable neighbors
+        with_matching_prefix = filter(
+            lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
-        alike = self._get_alike(dest, self.entries)
+        alike = self._get_alike(dest, with_matching_prefix)
 
         lowest_ip = self._resolve_matches(
             dest, alike, lambda dest, neighbor, candidate: -ip_to_num(neighbor.get_addr()))
@@ -50,9 +50,8 @@ class ForwardingTable():
     def _converge(self, dest):
         print("converging")
         print(self)
-        alike = self._get_alike(dest, self.entries)
         grouped_by_ip = self._group_by(
-            dest, alike, lambda dest, neighbor, entry: ip_to_num(entry['peer']))
+            dest, self.entries, lambda dest, neighbor, entry: ip_to_num(entry['peer']))
         just_converged = False
         has_converged_any = False
         converged_entries = []
@@ -64,11 +63,12 @@ class ForwardingTable():
             next_ip, next_routing = next
             cur_neighbor, cur_entry = cur_routing
             next_neighbor, next_entry = next_routing
-            inv_nm = invert_netmask(cur_entry['netmask'])
-            if cur_neighbor.get_addr() == next_neighbor.get_addr() and (cur_entry['netmask'] == next_entry['netmask']) and (abs(cur_ip - next_ip) == inv_nm):
+            cur_netmask_num = ip_to_num(cur_entry['netmask'])
+            if cur_neighbor.get_addr() == next_neighbor.get_addr() and self._entries_alike(cur_entry, next_entry) and self._ip_nums_adjacent(cur_ip, next_ip, cur_netmask_num):
                 # coalesce and skip next iteration
                 network_num = cur_ip if cur_ip < next_ip else next_ip
-                netmask_num = ip_to_num(cur_entry['netmask']) + (inv_nm + 1)
+                netmask_num = ip_to_num(
+                    cur_entry['netmask']) + (invert_netmask(cur_netmask_num) + 1)
                 new_entry = (cur_neighbor, {
                     'network': num_to_ip(network_num),
                     'netmask': num_to_ip(netmask_num),
@@ -85,9 +85,13 @@ class ForwardingTable():
         if has_converged_any:
             self._converge(dest)  # tail call for recursive converges
 
+    def _ip_nums_adjacent(self, ip_num1, ip_num2, netmask_num):
+        return abs(ip_num1 - ip_num2) == invert_netmask(netmask_num) + 1
+
+    def _entries_alike(self, entry1, entry2):
+        return (entry1['netmask'] == entry2['netmask'] and entry1['localpref'] == entry1['localpref'] and entry1['origin'] == entry2['origin'] and entry1['selfOrigin'] == entry2['selfOrigin'] and entry1['ASPath'] == entry2['ASPath'])
+
     def _get_alike(self, dest, entries):
-        with_matching_prefix = filter(
-            lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
