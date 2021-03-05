@@ -96,7 +96,7 @@ class ForwardingTable():
     def _entries_alike(self, entry1, entry2):
         return (entry1['netmask'] == entry2['netmask'] and entry1['localpref'] == entry1['localpref'] and entry1['origin'] == entry2['origin'] and entry1['selfOrigin'] == entry2['selfOrigin'] and entry1['ASPath'] == entry2['ASPath'])
 
-    def _get_alike(self, dest, entries):
+    def _break_ties(self, dest, entries):
 
         highest_prefix_matches = self._resolve_matches(
             dest, entries, self._rank_prefix_match)
