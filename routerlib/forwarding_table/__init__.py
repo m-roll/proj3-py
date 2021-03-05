@@ -103,3 +103,10 @@ class ForwardingTable():
         return lambda table_entry: not (revokation['netmask'] == table_entry['netmask']
                                         and revokation['network'] == table_entry['network']
                                         and source.get_addr() == table_entry['peer'])
+
+    def __str__(self):
+        printout = "============ROUTING TABLE===========\n"
+        for entry in self.entries:
+            printout += f"Source: {entry[0].__str__()}; Entry: {entry[1].__str__()}\n"
+        printout = "==========END ROUTING TABLE========="
+        return printout
