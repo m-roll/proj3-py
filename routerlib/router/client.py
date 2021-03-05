@@ -42,10 +42,10 @@ class RouterClient():
         msg = Message('table', src, dest, table)
         self._transmit(dest_neighbor, msg)
 
-    def send_no_route(self, dest_neighbor):
+    def send_no_route(self, dest_neighbor, unroutable_msg):
         src = dest_neighbor.get_my_router_addr()
         dest = dest_neighbor.get_addr()
-        msg = Message('no route', src, dest, {})
+        msg = Message('no route', src, unroutable_msg.dest, {})
         self._transmit(dest_neighbor, msg)
 
     def _transmit_many(self, neighbors, msg):

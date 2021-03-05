@@ -33,7 +33,7 @@ class MessageHandler():
             (route_neighbor, routing_info) = routing_tuple
             self.router_client.forward_data(route_neighbor, msg)
         else:
-            self.router_client.send_no_route(source)
+            self.router_client.send_no_route(source, msg)
 
     def visit_dump(self, source, dest, msg):
         self.router_client.send_table_dump(
