@@ -15,7 +15,7 @@ class MessageHandler():
 
     def handle_message(self, neighbor, message):
         dest = message.dest
-        print(dest, message)
+        print(neighbor, message)
         message.dispatch(self.message_history, neighbor, dest)
         message.dispatch(self.forwarding_table, neighbor, dest)
         message.dispatch(self, neighbor, dest)
