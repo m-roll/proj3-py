@@ -52,10 +52,12 @@ class ForwardingTable():
         print(self)
         grouped_by_ip = self._group_by(
             dest, self.entries, lambda dest, neighbor, entry: ip_to_num(entry['network']))
+        items_sorted_by_ip = sorted(grouped_by_ip.items(),
+                                    key=lambda pair: pair[0])
         just_converged = False
         has_converged_any = False
         converged_entries = []
-        for cur, next in pairwise(grouped_by_ip.items()):
+        for cur, next in pairwise(items_sorted_by_ip):
             if just_converged:
                 just_converged = False
                 continue
