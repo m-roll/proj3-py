@@ -26,7 +26,7 @@ class ForwardingTable():
 
         # only include viable neighbors
 
-        alike = self._group_alike(dest, self.entries)
+        alike = self._get_alike(dest, self.entries)
 
         lowest_ip = self._resolve_matches(
             dest, alike, lambda dest, neighbor, candidate: -self._ip_to_num(neighbor.get_addr()))
