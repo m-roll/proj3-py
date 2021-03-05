@@ -29,7 +29,7 @@ class MessageHandler():
 
     def visit_data(self, source, dest, msg):
         routing_tuple = self.forwarding_table.get_route(dest)
-        if routing_tuple is not None and (source['type'] == 'cust' or routing_tuple[0]['type'] == 'cust'):
+        if routing_tuple is not None and (source.type == 'cust' or routing_tuple[0].type == 'cust'):
             (route_neighbor, routing_info) = routing_tuple
             self.router_client.forward_data(route_neighbor, msg)
         else:
