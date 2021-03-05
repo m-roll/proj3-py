@@ -21,7 +21,7 @@ class ForwardingTable():
         for revokation in revokations:
             filtered_entries = filter(
                 self._filter_revokation(revokation, source), filtered_entries)
-        self.entries = filtered_entries
+        self.entries = list(filtered_entries)
         print("POST REVOKATION: ")
         print(self)
 
