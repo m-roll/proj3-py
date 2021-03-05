@@ -15,7 +15,6 @@ class MessageHandler():
 
     def handle_message(self, neighbor, message):
         dest = message.dest
-        # print(f'Received message: {json.dumps(message, cls=MessageEncoder)}')
         print(dest, message)
         message.dispatch(self.message_history, neighbor, dest)
         message.dispatch(self.forwarding_table, neighbor, dest)

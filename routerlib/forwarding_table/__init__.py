@@ -30,6 +30,8 @@ class ForwardingTable():
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
+        print("Before checking highest prefix for deste {dest}")
+        print(self)
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
 
