@@ -26,13 +26,10 @@ class ForwardingTable():
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
-        alike = self._get_alike(dest, with_matching_prefix)
-
-        lowest_ip = self._resolve_matches(
-            dest, alike, lambda dest, neighbor, candidate: -ip_to_num(neighbor.get_addr()))
+        best_matches = self._break_ties(dest, with_matching_prefix)
 
         try:
-            return lowest_ip[0]
+            return best_matches[0]
         except IndexError:
             return None
 
@@ -94,7 +91,7 @@ class ForwardingTable():
             self._converge(dest)  # tail call for recursive converges
 
     def _ip_nums_adjacent(self, ip_num1, ip_num2, netmask_num):
-        return abs(ip_num1 - ip_num2) == invert_netmask(netmask_num) + 1
+        return abs(ip_num1 - ip_num2) == invert_netmask(netmask_num)
 
     def _entries_alike(self, entry1, entry2):
         return (entry1['netmask'] == entry2['netmask'] and entry1['localpref'] == entry1['localpref'] and entry1['origin'] == entry2['origin'] and entry1['selfOrigin'] == entry2['selfOrigin'] and entry1['ASPath'] == entry2['ASPath'])
@@ -116,7 +113,10 @@ class ForwardingTable():
         pref_origin_type = self._resolve_matches(
             dest, smallest_as_path, self._rank_origin_by_type)
 
-        return pref_origin_type
+        lowest_ip = self._resolve_matches(
+            dest, pref_origin_type, lambda dest, neighbor, candidate: -ip_to_num(neighbor.get_addr()))
+
+        return lowest_ip
 
     def _group_by(self, dest, candidates, key):
         cand_precedence = {}
