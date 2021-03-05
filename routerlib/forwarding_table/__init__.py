@@ -68,8 +68,8 @@ class ForwardingTable():
                 # coalesce and skip next iteration
                 print(f'SHOULD BE MERGING entries {cur_entry} {next_entry}')
                 network_num = cur_ip if cur_ip < next_ip else next_ip
-                netmask_num = ip_to_num(
-                    cur_entry['netmask']) + invert_netmask(invert_netmask(cur_netmask_num) << 1)
+                netmask_num = invert_netmask(
+                    invert_netmask(cur_netmask_num) << 1)
                 new_entry = (cur_neighbor, {
                     'network': num_to_ip(network_num),
                     'netmask': num_to_ip(netmask_num),
