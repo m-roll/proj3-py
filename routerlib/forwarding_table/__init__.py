@@ -1,5 +1,4 @@
-import socket
-import struct
+from routerlib.util import pairwise, invert_netmask, ip_to_num, num_to_ip
 
 
 class ForwardingTable():
@@ -12,6 +11,7 @@ class ForwardingTable():
         peer = source.get_addr()
         new_entry = msg.msg
         self.entries.append((source, new_entry))
+        self._converge(dest)
 
     def visit_revoke(self, source, dest, msg):
         revokations = msg.msg
@@ -29,7 +29,7 @@ class ForwardingTable():
         alike = self._get_alike(dest, self.entries)
 
         lowest_ip = self._resolve_matches(
-            dest, alike, lambda dest, neighbor, candidate: -self._ip_to_num(neighbor.get_addr()))
+            dest, alike, lambda dest, neighbor, candidate: -ip_to_num(neighbor.get_addr()))
 
         try:
             return lowest_ip[0]
@@ -46,6 +46,41 @@ class ForwardingTable():
 
     def visit_dump(self, source, dest, msg):
         print(self)
+
+    def _converge(self, dest):
+        alike = self._get_alike(dest, self.entries)
+        grouped_by_ip = self._group_by(
+            dest, alike, lambda dest, neighbor, entry: ip_to_num(entry['peer']))
+        just_converged = False
+        has_converged_any = False
+        converged_entries = []
+        for cur, next in pairwise(grouped_by_ip):
+            if just_converged:
+                just_converged = False
+                continue
+            cur_ip, cur_routing = cur
+            next_ip, next_routing = next
+            cur_neighbor, cur_entry = cur_routing
+            next_neighbor, next_entry = next_routing
+            if cur_neighbor.get_addr() == next_neighbor.get_addr() and (cur_entry['netmask'] == next_entry['netmask']) and (abs(cur_ip - next_ip) == (inv_nm := invert_netmask(cur_entry['netmask']))):
+                # coalesce and skip next iteration
+                network_num = cur_ip if cur_ip < next_ip else next_ip
+                netmask_num = ip_to_num(cur_entry['netmask']) + (inv_nm + 1)
+                new_entry = (cur_neighbor, {
+                    'network': num_to_ip(network_num),
+                    'netmask': num_to_ip(netmask_num),
+                    'localpref': cur_entry['localpref'],
+                    'ASPath': cur_entry['ASPath'],
+                    'origin': cur_entry['origin'],
+                    'selfOrigin': cur_entry['selfOrigin']
+                })
+                just_converged = True
+                has_converged_any = True
+                converged_entries.append(new_entry)
+            else:
+                converged_entries.append(cur_routing)
+        if has_converged_any:
+            self._converge(dest)  # tail call for recursive converges
 
     def _get_alike(self, dest, entries):
         with_matching_prefix = filter(
@@ -86,8 +121,8 @@ class ForwardingTable():
         return highest_prefix_matches
 
     def _rank_prefix_match(self, dest, neighbor, candidate):
-        dest_ip_int = self._ip_to_num(dest)
-        netmask_int = self._ip_to_num(candidate['netmask'])
+        dest_ip_int = ip_to_num(dest)
+        netmask_int = ip_to_num(candidate['netmask'])
         match_size = dest_ip_int & netmask_int
         return match_size
 
@@ -102,14 +137,10 @@ class ForwardingTable():
             return -1
 
     def _filter_matching_prefix(self, entry, dest):
-        dest_ip_int = self._ip_to_num(dest)
-        network_int = self._ip_to_num(entry['network'])
-        netmask_int = self._ip_to_num(entry['netmask'])
+        dest_ip_int = ip_to_num(dest)
+        network_int = ip_to_num(entry['network'])
+        netmask_int = ip_to_num(entry['netmask'])
         return (dest_ip_int & netmask_int) == (network_int & netmask_int)
-
-    def _ip_to_num(self, ip):
-        ip_parts = ip.split(".")
-        return (int(ip_parts[0]) << 24) + (int(ip_parts[1]) << 16) + (int(ip_parts[2]) << 8) + int(ip_parts[3])
 
     def _filter_revokation(self, revokation, source):
         return lambda routing_tuple: not (revokation['netmask'] == routing_tuple[1]['netmask']
