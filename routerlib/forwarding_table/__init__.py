@@ -48,6 +48,8 @@ class ForwardingTable():
         print(self)
 
     def _converge(self, dest):
+        print("converging")
+        print(self)
         alike = self._get_alike(dest, self.entries)
         grouped_by_ip = self._group_by(
             dest, alike, lambda dest, neighbor, entry: ip_to_num(entry['peer']))
