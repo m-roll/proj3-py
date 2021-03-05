@@ -14,12 +14,16 @@ class ForwardingTable():
         self.entries.append((source, new_entry))
 
     def visit_revoke(self, source, dest, msg):
+        print("PRE REVOKATION:")
+        print(self)
         revokations = msg.msg
         filtered_entries = self.entries
         for revokation in revokations:
             filtered_entries = filter(
                 self._filter_revokation(revokation, source), filtered_entries)
         self.entries = filtered_entries
+        print("POST REVOKATION: ")
+        print(self)
 
     def get_route(self, dest):
         # remove any without matching prefix
