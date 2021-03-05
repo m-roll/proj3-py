@@ -28,6 +28,9 @@ class ForwardingTable():
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
 
+        local_pref_matches = self._resolve_matches(
+            dest, highest_prefix_matches, lambda dest, candidate: candidate['localpref'])
+
         self_origin_matches = self._resolve_matches(
             dest, highest_prefix_matches, lambda dest, candidate: 1 if candidate['selfOrigin'] else 0)
 
