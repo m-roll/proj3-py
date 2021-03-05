@@ -13,7 +13,7 @@ def pairwise(iterable):
 
 
 def invert_netmask(netmask):
-    netmask ^ ip_to_num("255.255.255.255")
+    return netmask ^ ip_to_num("255.255.255.255")
 
 
 def ip_to_num(ip):
