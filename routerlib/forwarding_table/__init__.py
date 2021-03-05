@@ -26,6 +26,28 @@ class ForwardingTable():
 
         # only include viable neighbors
 
+        alike = self._group_alike(dest, self.entries)
+
+        lowest_ip = self._resolve_matches(
+            dest, alike, lambda dest, neighbor, candidate: -self._ip_to_num(neighbor.get_addr()))
+
+        try:
+            return lowest_ip[0]
+        except IndexError:
+            return None
+
+    def get_entries(self):
+        formatted = map(lambda tuple: {
+            "network": tuple[1]['network'], "peer": tuple[0].get_addr(), "netmask": tuple[1]['netmask']}, self.entries)
+        return list(formatted)
+
+    def visit_data(self, source, dest, msg):
+        pass
+
+    def visit_dump(self, source, dest, msg):
+        print(self)
+
+    def _get_alike(self, dest, entries):
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
@@ -44,26 +66,9 @@ class ForwardingTable():
         pref_origin_type = self._resolve_matches(
             dest, smallest_as_path, self._rank_origin_by_type)
 
-        lowest_ip = self._resolve_matches(
-            dest, pref_origin_type, lambda dest, neighbor, candidate: -self._ip_to_num(neighbor.get_addr()))
+        return pref_origin_type
 
-        try:
-            return lowest_ip[0]
-        except IndexError:
-            return None
-
-    def get_entries(self):
-        formatted = map(lambda tuple: {
-            "network": tuple[1]['network'], "peer": tuple[0].get_addr(), "netmask": tuple[1]['netmask']}, self.entries)
-        return list(formatted)
-
-    def visit_data(self, source, dest, msg):
-        pass
-
-    def visit_dump(self, source, dest, msg):
-        print(self)
-
-    def _resolve_matches(self, dest, candidates, key):
+    def _group_by(self, dest, candidates, key):
         cand_precedence = {}
         for candidate in candidates:
             cand_neighbor, cand_entry = candidate
@@ -71,8 +76,12 @@ class ForwardingTable():
             index_mems = cand_precedence.get(index, [])
             index_mems.append(candidate)
             cand_precedence[index] = index_mems
+        return cand_precedence
 
-        _len, highest_prefix_matches = sorted(cand_precedence.items(),
+    def _resolve_matches(self, dest, candidates, key):
+        grouped = self._group_by(dest, candidates, key)
+
+        _len, highest_prefix_matches = sorted(grouped.items(),
                                               key=lambda pair: pair[0], reverse=True)[0]
         return highest_prefix_matches
 
