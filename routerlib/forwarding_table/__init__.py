@@ -64,7 +64,7 @@ class ForwardingTable():
             next_neighbor, next_entry = next_routing[0]
             cur_netmask_num = ip_to_num(cur_entry['netmask'])
             if self._entries_alike(cur_entry, next_entry):
-                print('entries alike {cur_entry}, {next_entry}')
+                print(f'entries alike {cur_entry}, {next_entry}')
 
             if cur_neighbor.get_addr() == next_neighbor.get_addr() and self._entries_alike(cur_entry, next_entry) and self._ip_nums_adjacent(cur_ip, next_ip, cur_netmask_num):
                 # coalesce and skip next iteration
