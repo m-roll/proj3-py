@@ -69,7 +69,7 @@ class ForwardingTable():
             cand_precedence[index] = index_mems
 
         _len, highest_prefix_matches = sorted(cand_precedence.items(),
-                                              key=lambda pair: pair[0])[0]
+                                              key=lambda pair: pair[0], reverse=True)[0]
         return highest_prefix_matches
 
     def _rank_prefix_match(self, dest, candidate):
