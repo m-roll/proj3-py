@@ -90,7 +90,7 @@ class ForwardingTable():
             self._converge(dest)  # tail call for recursive converges
 
     def _ip_nums_adjacent(self, ip_num1, ip_num2, netmask_num):
-        return abs(ip_num1 - ip_num2) == invert_netmask(netmask_num)
+        return abs(ip_num1 - ip_num2) == invert_netmask(netmask_num) + 1
 
     def _entries_alike(self, entry1, entry2):
         return (entry1['netmask'] == entry2['netmask'] and entry1['localpref'] == entry1['localpref'] and entry1['origin'] == entry2['origin'] and entry1['selfOrigin'] == entry2['selfOrigin'] and entry1['ASPath'] == entry2['ASPath'])
