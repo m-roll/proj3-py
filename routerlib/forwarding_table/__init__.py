@@ -83,6 +83,7 @@ class ForwardingTable():
             else:
                 converged_entries.append(cur_routing)
         if has_converged_any:
+            self.entries = converged_entries
             self._converge(dest)  # tail call for recursive converges
 
     def _ip_nums_adjacent(self, ip_num1, ip_num2, netmask_num):
