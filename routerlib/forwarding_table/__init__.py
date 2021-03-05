@@ -88,7 +88,7 @@ class ForwardingTable():
                 has_converged_any = True
                 converged_entries.append(new_entry)
             else:
-                converged_entries.append(cur_routing)
+                converged_entries.append(cur_routing[0])
         if has_converged_any:
             self.entries = converged_entries
             self._converge(dest)  # tail call for recursive converges
