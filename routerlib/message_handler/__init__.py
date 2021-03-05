@@ -16,6 +16,7 @@ class MessageHandler():
     def handle_message(self, neighbor, message):
         dest = message.dest
         # print(f'Received message: {json.dumps(message, cls=MessageEncoder)}')
+        print(dest, message)
         message.dispatch(self.message_history, neighbor, dest)
         message.dispatch(self.forwarding_table, neighbor, dest)
         message.dispatch(self, neighbor, dest)
@@ -24,7 +25,7 @@ class MessageHandler():
         self.router_client.broadcast_update(msg, self._filter_source(source))
 
     def visit_revoke(self, source, dest, msg):
-        print(dest, msg)
+
         self.router_client.broadcast_revoke(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
