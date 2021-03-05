@@ -45,30 +45,20 @@ class ForwardingTable():
         print(self)
 
     def _converge(self, dest):
-        print("converging")
-        print(self)
         grouped_by_ip = self._group_by(
             dest, self.entries, lambda dest, neighbor, entry: ip_to_num(entry['network']))
         items_sorted_by_ip = sorted(grouped_by_ip.items(),
                                     key=lambda pair: pair[0])
-        just_converged = False
         has_converged_any = False
         converged_entries = []
         for cur, next in pairwise(items_sorted_by_ip):
-            if just_converged:
-                just_converged = False
-                continue
             cur_ip, cur_routing = cur
             next_ip, next_routing = next
             cur_neighbor, cur_entry = cur_routing[0]
             next_neighbor, next_entry = next_routing[0]
             cur_netmask_num = ip_to_num(cur_entry['netmask'])
-            if self._entries_alike(cur_entry, next_entry):
-                print(f'entries alike {cur_entry}, {next_entry}')
 
             if cur_neighbor.get_addr() == next_neighbor.get_addr() and self._entries_alike(cur_entry, next_entry) and self._ip_nums_adjacent(cur_ip, next_ip, cur_netmask_num):
-                # coalesce and skip next iteration
-                print(f'SHOULD BE MERGING entries {cur_entry} {next_entry}')
                 network_num = cur_ip if cur_ip < next_ip else next_ip
                 netmask_num = invert_netmask(
                     invert_netmask(cur_netmask_num) << 1) - 1
@@ -80,7 +70,6 @@ class ForwardingTable():
                     'origin': cur_entry['origin'],
                     'selfOrigin': cur_entry['selfOrigin']
                 })
-                just_converged = True
                 has_converged_any = True
                 converged_entries.append(new_entry)
             else:
