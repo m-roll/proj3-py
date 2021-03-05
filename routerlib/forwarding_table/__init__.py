@@ -32,7 +32,7 @@ class ForwardingTable():
             dest, highest_prefix_matches, lambda dest, candidate: candidate['localpref'])
 
         self_origin_matches = self._resolve_matches(
-            dest, highest_prefix_matches, lambda dest, candidate: 1 if candidate['selfOrigin'] else 0)
+            dest, local_pref_matches, lambda dest, candidate: 1 if candidate['selfOrigin'] else 0)
 
         smallest_as_path = self._resolve_matches(
             dest, self_origin_matches, lambda dest, candidate: -len(candidate['ASPath']))
