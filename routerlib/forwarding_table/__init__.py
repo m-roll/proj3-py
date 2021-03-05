@@ -104,5 +104,5 @@ class ForwardingTable():
         printout = "============ROUTING TABLE===========\n"
         for entry in self.entries:
             printout += f"Source: {entry[0].__str__()}; Entry: {entry[1].__str__()}\n"
-        printout = "==========END ROUTING TABLE========="
+        printout += "==========END ROUTING TABLE========="
         return printout
