@@ -54,7 +54,11 @@ class ForwardingTable():
         pass
 
     def visit_dump(self, source, dest, msg):
-        pass
+        # just print out the data on a dump request
+        print("##################################")
+        print("Dumping routing table...")
+        for entry in self.entries:
+            print(entry)
 
     def _resolve_matches(self, dest, candidates, key):
         cand_precedence = {}
