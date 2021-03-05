@@ -66,6 +66,7 @@ class ForwardingTable():
             cur_netmask_num = ip_to_num(cur_entry['netmask'])
             if cur_neighbor.get_addr() == next_neighbor.get_addr() and self._entries_alike(cur_entry, next_entry) and self._ip_nums_adjacent(cur_ip, next_ip, cur_netmask_num):
                 # coalesce and skip next iteration
+                print(f'SHOULD BE MERGING entries {cur_entry} {next_entry}')
                 network_num = cur_ip if cur_ip < next_ip else next_ip
                 netmask_num = ip_to_num(
                     cur_entry['netmask']) + (invert_netmask(cur_netmask_num) + 1)
