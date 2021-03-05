@@ -21,6 +21,9 @@ class Message():
             visit_callback = receiver.visit_dump
         visit_callback(neighbor_from, dest, self)
 
+    def __str__(self):
+        return f"MESSAGE{{type: {self.type}, source: {self.type}, dest: {self.dest}}}"
+
 
 class MessageEncoder(json.JSONEncoder):
     def default(self, obj):
