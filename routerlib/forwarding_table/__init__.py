@@ -102,7 +102,7 @@ class ForwardingTable():
     def _filter_revokation(self, revokation, source):
         return lambda routing_tuple: not (revokation['netmask'] == routing_tuple[1]['netmask']
                                           and revokation['network'] == routing_tuple[1]['network']
-                                          and source.get_addr() == routing_tuple[1]['peer'])
+                                          and source.get_addr() == routing_tuple[0].get_addr())
 
     def __str__(self):
         printout = "============ROUTING TABLE===========\n"
