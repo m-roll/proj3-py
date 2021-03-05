@@ -44,7 +44,6 @@ class RouterClient():
 
     def send_no_route(self, dest_neighbor, unroutable_msg):
         src = dest_neighbor.get_my_router_addr()
-        dest = dest_neighbor.get_addr()
         msg = Message('no route', src, unroutable_msg.dest, {})
         self._transmit(dest_neighbor, msg)
 
