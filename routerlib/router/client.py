@@ -55,6 +55,7 @@ class RouterClient():
         neighbor.transmit(msg)
 
     def _incr_path(self, msg):
+        msg = msg.copy()
         new_path = msg['ASPath'][:]
         last = new_path[-1]
         if not self._as == last:
