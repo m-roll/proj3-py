@@ -14,24 +14,18 @@ class ForwardingTable():
         self.entries.append((source, new_entry))
 
     def visit_revoke(self, source, dest, msg):
-        print("PRE REVOKATION:")
-        print(self)
         revokations = msg.msg
         filtered_entries = self.entries
         for revokation in revokations:
             filtered_entries = filter(
                 self._filter_revokation(revokation, source), filtered_entries)
         self.entries = list(filtered_entries)
-        print("POST REVOKATION: ")
-        print(self)
 
     def get_route(self, dest):
         # remove any without matching prefix
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 
-        print("Before checking highest prefix for deste {dest}")
-        print(self)
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
 
