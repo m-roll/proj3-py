@@ -95,7 +95,7 @@ class ForwardingTable():
     def _get_alike(self, dest, entries):
 
         highest_prefix_matches = self._resolve_matches(
-            dest, with_matching_prefix, self._rank_prefix_match)
+            dest, entries, self._rank_prefix_match)
 
         local_pref_matches = self._resolve_matches(
             dest, highest_prefix_matches, lambda dest, neighbor, candidate: candidate['localpref'])
