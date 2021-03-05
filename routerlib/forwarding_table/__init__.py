@@ -62,7 +62,8 @@ class ForwardingTable():
             next_ip, next_routing = next
             cur_neighbor, cur_entry = cur_routing
             next_neighbor, next_entry = next_routing
-            if cur_neighbor.get_addr() == next_neighbor.get_addr() and (cur_entry['netmask'] == next_entry['netmask']) and (abs(cur_ip - next_ip) == (inv_nm := invert_netmask(cur_entry['netmask']))):
+            inv_nm = invert_netmask(cur_entry['netmask'])
+            if cur_neighbor.get_addr() == next_neighbor.get_addr() and (cur_entry['netmask'] == next_entry['netmask']) and (abs(cur_ip - next_ip) == inv_nm):
                 # coalesce and skip next iteration
                 network_num = cur_ip if cur_ip < next_ip else next_ip
                 netmask_num = ip_to_num(cur_entry['netmask']) + (inv_nm + 1)
