@@ -51,7 +51,7 @@ class ForwardingTable():
         print("converging")
         print(self)
         grouped_by_ip = self._group_by(
-            dest, self.entries, lambda dest, neighbor, entry: ip_to_num(entry['peer']))
+            dest, self.entries, lambda dest, neighbor, entry: ip_to_num(entry['network']))
         just_converged = False
         has_converged_any = False
         converged_entries = []
