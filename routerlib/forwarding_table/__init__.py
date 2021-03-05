@@ -23,6 +23,9 @@ class ForwardingTable():
 
     def get_route(self, dest):
         # remove any without matching prefix
+
+        # only include viable neighbors
+
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
 

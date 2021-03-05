@@ -28,9 +28,8 @@ class MessageHandler():
         self.router_client.broadcast_revoke(msg, self._filter_source(source))
 
     def visit_data(self, source, dest, msg):
-        # self.router_client.forward_data(msg, self._filter_source(source))
         routing_tuple = self.forwarding_table.get_route(dest)
-        if routing_tuple is not None:
+        if routing_tuple is not None and (source['type'] == 'cust' or routing_tuple[0]['type'] == 'cust'):
             (route_neighbor, routing_info) = routing_tuple
             self.router_client.forward_data(route_neighbor, msg)
         else:
