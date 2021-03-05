@@ -24,24 +24,24 @@ class ForwardingTable():
         # remove any without matching prefix
         with_matching_prefix = filter(
             lambda tuple: self._filter_matching_prefix(tuple[1], dest), self.entries)
-        print(list(with_matching_prefix))
+
         highest_prefix_matches = self._resolve_matches(
             dest, with_matching_prefix, self._rank_prefix_match)
 
         local_pref_matches = self._resolve_matches(
-            dest, highest_prefix_matches, lambda dest, candidate: candidate['localpref'])
+            dest, highest_prefix_matches, lambda dest, neighbor, candidate: candidate['localpref'])
 
         self_origin_matches = self._resolve_matches(
-            dest, local_pref_matches, lambda dest, candidate: 1 if candidate['selfOrigin'] else 0)
+            dest, local_pref_matches, lambda dest, neighbor, candidate: 1 if candidate['selfOrigin'] else 0)
 
         smallest_as_path = self._resolve_matches(
-            dest, self_origin_matches, lambda dest, candidate: -len(candidate['ASPath']))
+            dest, self_origin_matches, lambda dest, neighbor, candidate: -len(candidate['ASPath']))
 
         pref_origin_type = self._resolve_matches(
             dest, smallest_as_path, self._rank_origin_by_type)
 
         lowest_ip = self._resolve_matches(
-            dest, pref_origin_type, lambda dest, candidate: -self._ip_to_num(candidate['network']))
+            dest, pref_origin_type, lambda dest, neighbor, candidate: -self._ip_to_num(neighbor.get_addr()))
 
         try:
             return lowest_ip[0]
@@ -63,7 +63,7 @@ class ForwardingTable():
         cand_precedence = {}
         for candidate in candidates:
             cand_neighbor, cand_entry = candidate
-            index = key(dest, cand_entry)
+            index = key(dest, cand_neighbor, cand_entry)
             index_mems = cand_precedence.get(index, [])
             index_mems.append(candidate)
             cand_precedence[index] = index_mems
@@ -72,13 +72,13 @@ class ForwardingTable():
                                               key=lambda pair: pair[0], reverse=True)[0]
         return highest_prefix_matches
 
-    def _rank_prefix_match(self, dest, candidate):
+    def _rank_prefix_match(self, dest, neighbor, candidate):
         dest_ip_int = self._ip_to_num(dest)
         netmask_int = self._ip_to_num(candidate['netmask'])
         match_size = dest_ip_int & netmask_int
         return match_size
 
-    def _rank_origin_by_type(self, dest, candidate):
+    def _rank_origin_by_type(self, dest, neighbor, candidate):
         if candidate['origin'] == 'IGP':
             return 2
         elif candidate['origin'] == 'EGP':
