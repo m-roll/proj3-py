@@ -6,11 +6,10 @@ class MessageHistory():
         self.transmissions = []
 
     def visit_update(self, source, dest, msg):
-        self._append(source, dest, msg)
-        self.messages.append((source, dest, msg))
+        self._append('update', source, dest, msg)
 
     def visit_revoke(self, source, dest, msg):
-        pass
+        self._append('revoke', source, dest, msg)
 
     def visit_data(self, source, dest, msg):
         pass
