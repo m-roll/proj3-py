@@ -55,7 +55,7 @@ class ForwardingTable():
         just_converged = False
         has_converged_any = False
         converged_entries = []
-        for cur, next in pairwise(grouped_by_ip):
+        for cur, next in pairwise(grouped_by_ip.items()):
             if just_converged:
                 just_converged = False
                 continue
