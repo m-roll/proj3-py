@@ -22,7 +22,7 @@ class Message():
         visit_callback(neighbor_from, dest, self)
 
     def __str__(self):
-        return f"MESSAGE{{type: {self.type}, source: {self.type}, dest: {self.dest}}}"
+        return f"MESSAGE{{type: {self.type}, source: {self.type}, dest: {self.dest}, msg: {self.msg}}}"
 
 
 class MessageEncoder(json.JSONEncoder):
